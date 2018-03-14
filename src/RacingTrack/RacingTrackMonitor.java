@@ -11,7 +11,6 @@ public class RacingTrackMonitor implements IRacingTrack_Broker, IRacingTrack_Hor
 
     public RacingTrackMonitor(int distance){ //dizer distancia aquando instanciamento
         this.r1 = new ReentrantLock();
-        this.broker = r1.newCondition;
         this.horse = r1.newCondition;
     }
 
@@ -30,11 +29,11 @@ public class RacingTrackMonitor implements IRacingTrack_Broker, IRacingTrack_Hor
     public proceedToStartLine(){
         r1.lock()
         try{
+        }
             try{
                 while(true){
                     //the spectator is waken up?
-                    broker.wait();
-                    horse.signal(); //acordar cavalos (not sure if needed)
+                    horse.await();
                     break;
                 }
             }catch (Exception e){}
@@ -43,12 +42,14 @@ public class RacingTrackMonitor implements IRacingTrack_Broker, IRacingTrack_Hor
     } //função do cavalo
 
     //wake horse
-    public makeAMove(HorseThread h_t){ //entra o HorseThread e não o ID para conseguir aceder aos atributos
+    public makeAMove(int id){ //entra o HorseThread e não o ID para conseguir aceder aos atributos
         r1.lock();
 
         try{
-            h_t.moves = h_t.moves + h_t.maxUnits; //cavalo avança maxUnit passos, sendo esses passos guardados no "moves"
+            moves = moves + maxUnits; //cavalo avança maxUnit passos, sendo esses passos guardados no "moves"
             horse.signal(); //acordar outro cavalo
+            if (!hasFinishLineBeenCrossed())
+                horse.await();
         }
         finally{
             r1.unlock();
@@ -62,11 +63,11 @@ public class RacingTrackMonitor implements IRacingTrack_Broker, IRacingTrack_Hor
         try{
             try{
                 while(distance > moves){
-                    broker.wait() //broker não pode fazer nada por enquanto
+                    horse.await() p//broker não pode fazer nada por enquanto
                 }
             } catch (Exeption ex) {}
         }
-        //return True (?)
+        //do something here
         finally{
             r1.unlock();
         }
