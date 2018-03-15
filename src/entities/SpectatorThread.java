@@ -15,4 +15,22 @@ public class SpectatorThread extends Thread{
 		this.mon_paddock = new Paddock.PaddockMonitor();
 		this.mon_wc = new WatchingStand.WatchingStandMonitor();
 	}
+
+	@Override
+	void run(){
+		while(waitForNextRace()){
+			goCheckHorses();
+			placeBet();
+			goWatchTheRace();
+			if(haveIWon()) goCollecttheGains();
+		}
+		relaxABit();
+	}
+
+
+
+
+
+
+
 }

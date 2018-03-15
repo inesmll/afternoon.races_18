@@ -21,4 +21,14 @@ public class HorseThread extends Thread{
 		this.mon_paddock = new Paddock.PaddockMonitor();
 		this.mon_track = new RacingTrack.RacingTrackMonitor();
 	}
+	@Override
+	void run(){
+		proceedToStable()
+		proceedToPaddock();
+		proceedToStartLine();
+		do{
+			makeMove()
+		}while(!hasFinishLineBeenCrossed())
+		proceedToStable()
+	}
 }
